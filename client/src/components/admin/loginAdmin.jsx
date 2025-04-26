@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 function AdminLogin() {
-    const [admin,setAdmin]=use({
+    const [admin,setAdmin]=useState({
         email:"",
         password:""
     })

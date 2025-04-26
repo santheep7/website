@@ -15,7 +15,7 @@ export default function RegisterPage(){
     }
     const validate=()=>{
         const newError={}
-        if(!record.username.trim())newError.username="username required";
+        if(!record.username.trim())newError.username="username is required";
         if(!record.email.trim())newError.email="email required";
         else if(!/\S+@\S+\.\S+/.test(record.email)) newError.email = "Email format is invalid";
         if(!record.password)newError.password="password required";

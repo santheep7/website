@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AXIOS from 'axios';
-import './reg.css';
+import './log.css';
 import { useNavigate} from 'react-router-dom'
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 export default function LoginUser(){
@@ -30,15 +30,16 @@ export default function LoginUser(){
             return;
         }
         console.log(record)
-        AXIOS.post('http://localhost:9000/api/user/loginuser',record)
+        AXIOS.post('http://localhost:9000/api/user/loginuser', record)
+
         .then((res)=>{
             alert(res.data.msg)
             if(res.data.status == 200)
                 localStorage.setItem("token",res.data.token)
-               navigate("/userhome")
-            toast.success('User Registered Successful')
+            toast.success('User LOgin success')
+            setTimeout(()=>{navigate("/userhome")},3000)
         }).catch((err)=>{
-            console.log(err)
+            console.err(err)
             alert("Error occcured")
         })
     }
@@ -64,8 +65,8 @@ export default function LoginUser(){
             
                 <p><input type="password" name="password" placeholder="password" onChange={handleChange} />
                     {error.password && <span style={{ color: "red" }}></span>}{error.password}</p>
-                <p><button type="submit">Login</button></p>
-                <a href="/reg">Register here?</a>
+                <p><button type="submit">Login</button>
+                <a href="/reg">Register here?</a></p>
 
             </form>
         </>

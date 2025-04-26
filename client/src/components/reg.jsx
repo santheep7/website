@@ -63,7 +63,8 @@ export default function RegisterPage(){
                     {error.email && <span style={{ color: "red" }}></span>}{error.email}</p>
                 <p><input type="password" name="password" placeholder="password" onChange={handleChange} />
                     {error.password && <span style={{ color: "red" }}></span>}{error.password}</p>
-                <p><button type="submit">Login</button></p>
+                <p><button type="submit">Login</button>
+                <a href="/login">Sign In</a></p>
             </form>
         </>
     )

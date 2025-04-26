@@ -4,5 +4,6 @@ const userRoute = express.Router()
 
 
 userRoute.post('/register',registerUser)
-userRoute.post('./loginuser',loginUser)
+userRoute.post('/loginuser', loginUser); // ✅ correct path
+
 module.exports =userRoute;

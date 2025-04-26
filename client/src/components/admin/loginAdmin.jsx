@@ -17,6 +17,9 @@ function AdminLogin() {
         {
             alert("login succesfull")
         }
+        else{
+          alert("invalid credentials")
+        }
     }
   return (
     <Form onSubmit={handleSubmit}>

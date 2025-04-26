@@ -1,0 +1,17 @@
+.navabar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(74, 222, 245);
+}
+ul{
+    list-style: none;
+    display: flex;
+    width: 70%;
+    justify-content: space-around;
+}
+li a{
+    text-decoration: none;
+    color: black;
+    font-size: 25px;
+}

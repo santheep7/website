@@ -1,33 +1,27 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Correct imports
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Import your components
 import LoginUser from './components/user/login';
-import RegisterPage from './components/reg';
+import RegisterPage from './components/user/reg';
 import UserHome from './components/user/userhome';
 import AdminLogin from './components/admin/loginAdmin';
 import Adminhome from './components/admin/adminhome';
-// import Navbar from './components/Navbar'; // Import Navbar component
-import UseNavbar from './components/navbar';
-
+import ViewUserDetails from './components/admin/viewUser';
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-         {/* This will be on all pages */}
-        <Routes>
-        <Route path="/" element={<UseNavbar />} />
-          <Route path="/login" element={<LoginUser />} />
-          <Route path="/reg" element={<RegisterPage />} />
-          <Route path="/userhome" element={<UserHome />} />
-          <Route path="/loginAdmin" element={<AdminLogin />} />
-          <Route path="/adminHome" element={<Adminhome />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginUser />} />
+        <Route path="/viewUser" element={<ViewUserDetails/>}/>
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/userhome" element={<UserHome />} />
+        <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route path="/adminhome" element={<Adminhome />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,42 +1,68 @@
-input{
-    margin-left: 85dvh;
-    padding: 10px;
-    border-radius: 7px;
-    border-top: 2px;
-    border-left: 2px;
-    margin-top: 7px;
-    border-right: 2px;
-    transition: 0.4s transform ease-in-out;
-}
-input:focus{
-    outline: none;
-    
-}
-input:hover{
-    transform: scale(1.05);
-
-}
-h1{
-    margin-left: 75dvh;
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
 }
 
-button:focus{
-    outline: none;
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
-button{
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+    margin-right: 490px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    padding: 70px;
+    padding-right: 120px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-form input {
+    margin-left: 100px;
+    margin-bottom: 15px;
+    padding: 12px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.login-form button {
+    margin-left: 100px;
+    margin-top: 10px;
+    background-color: #00c853;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
     border: none;
-    color: black;
-    background-color: rgb(8, 187, 20);
-    margin-left: 90dvh;
-    border-radius: 8px;
-    transition: 0.4s transform ease-in-out;
-    
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
-button:hover{
-    color: aliceblue;
-    background-color: blue;
-    transform: scale(1.04);
+
+.login-form button:hover {
+    background-color: #00b44b;
 }
-a{
-    margin-left: 10px;
+
+.register-link {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.register-link a {
+    color: blue;
+    text-decoration: underline;
 }

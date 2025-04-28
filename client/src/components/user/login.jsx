@@ -1,49 +1,54 @@
 import React, { useState } from "react";
 import AXIOS from 'axios';
-import './log.css';
-import { useNavigate} from 'react-router-dom'
+import './log.css'; // link your CSS file
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
-export default function LoginUser(){
-    const [record,setRecord]=useState({
-        username:"",
-        email:"",
-        password:""
-    })
-    const [error,setError]=useState({});
-    const navigate = useNavigate()
-    const handleChange=(e)=>{
-     setRecord({...record,[e.target.name]:e.target.value})
-    }
-    const validate=()=>{
-        const newError={}
-        if(!record.username.trim())newError.username="username required";
-       
-        if(!record.password)newError.password="password required";
-        return newError;
-    }
+import 'react-toastify/dist/ReactToastify.css'; // make sure you import this!
 
-    const handleSubmit=(e)=>{
+export default function LoginUser() {
+    const [record, setRecord] = useState({
+        email: "",
+        password: ""
+    });
+    const [error, setError] = useState({});
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setRecord({ ...record, [e.target.name]: e.target.value });
+    };
+
+    const validate = () => {
+        const newError = {};
+        if (!record.email.trim()) newError.email = "Email is required";
+        if (!record.password) newError.password = "Password required";
+        return newError;
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const validateErrors = validate()
-        if(Object.keys(validateErrors).length>0){
+        const validateErrors = validate();
+        if (Object.keys(validateErrors).length > 0) {
             setError(validateErrors);
             return;
         }
-        console.log(record)
+        console.log(record);
         AXIOS.post('http://localhost:9000/api/user/loginuser', record)
+            .then((res) => {
+                if (res.data.status === 200) {
+                    localStorage.setItem("token", res.data.token);
+                    toast.success('User Login successful');
+                    setTimeout(() => { navigate("/userhome"); }, 3000);
+                } else {
+                    toast.error(res.data.msg);
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                toast.error("Error occurred");
+            });
+    };
 
-        .then((res)=>{
-            alert(res.data.msg)
-            if(res.data.status == 200)
-                localStorage.setItem("token",res.data.token)
-            toast.success('User LOgin success')
-            setTimeout(()=>{navigate("/userhome")},3000)
-        }).catch((err)=>{
-            console.err(err)
-            alert("Error occcured")
-        })
-    }
-    return(
+    return (
         <>
             <ToastContainer
                 position="top-center"
@@ -58,17 +63,33 @@ export default function LoginUser(){
                 theme="light"
                 transition={Bounce}
             />
-            <h1>Login page</h1>
-            <form onSubmit={handleSubmit}>
-                <p><input type="text" name="username" placeholder="username" onChange={handleChange} />
-                    {error.username && <span style={{ color: "red" }}>{error.username}</span>}</p>
-            
-                <p><input type="password" name="password" placeholder="password" onChange={handleChange} />
-                    {error.password && <span style={{ color: "red" }}></span>}{error.password}</p>
-                <p><button type="submit">Login</button>
-                <a href="/reg">Register here?</a></p>
-
-            </form>
+            <div className="container">
+                <h1>Login Page</h1>
+                <form onSubmit={handleSubmit} className="login-form">
+                    <p>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            onChange={handleChange}
+                        />
+                        {error.email && <span style={{ color: "red" }}>{error.email}</span>}
+                    </p>
+                    <p>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            onChange={handleChange}
+                        />
+                        {error.password && <span style={{ color: "red" }}>{error.password}</span>}
+                    </p>
+                    <button type="submit">Login</button>
+                    <p className="register-link">
+                        Don't have an account? <a href="/reg">Register here</a>
+                    </p>
+                </form>
+            </div>
         </>
-    )
+    );
 }

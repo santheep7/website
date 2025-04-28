@@ -1,5 +1,5 @@
 const User = require('../model/user')
-
+const jwt=require('jsonwebtoken')
 const registerUser=async(req,res)=>{
     try{
         const {username,email,password} = req.body
@@ -18,11 +18,11 @@ const registerUser=async(req,res)=>{
 
 const loginUser=async(req,res)=>{
     try{
-        const { email,passsword}=req.body
+        const { email,password}=req.body
         const loggeduser=await User.findOne({email:email})
         console.log(loggeduser)
         if(loggeduser){
-            if(loggeduser.passsword == passsword){
+            if(loggeduser.password == password){
                 const token =jwt.sign({id:loggeduser._id},"jwtwebtoken321",{expiresIn:"1hr"})
                 res.json({msg:"user logined succesfully",status:200,token});
 
@@ -36,4 +36,5 @@ const loginUser=async(req,res)=>{
         console.log(error)
     }
 }
+
 module.exports= {registerUser,loginUser}

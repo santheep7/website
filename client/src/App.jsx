@@ -13,6 +13,8 @@ import UseNavbar from './components/user/navbar';
 import AdminBar from './components/admin/adminnavbar';
 import Addproducts from './components/admin/addproducts';
 import AdminViewProduct from './components/admin/adminviewproducts';
+import Admineditproduct from './components/admin/admineditproduct';
+import UserViewProducts from './components/user/userviewproducts';
 
 
 function App() {
@@ -29,7 +31,9 @@ function App() {
         <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/adminhome" element={<Adminhome />} />
         <Route path="/adminviewproducts" element={<AdminViewProduct />} />
-
+        <Route path="/admineditproduct/:id" element={<Admineditproduct />} />
+        <Route path='/userviewproducts' element={<UserViewProducts/>}/>
+        <Route path='/usercart' element={<UserViewProducts/>}/>
       </Routes>
     </BrowserRouter>
   );

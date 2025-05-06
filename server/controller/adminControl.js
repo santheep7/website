@@ -48,14 +48,42 @@ const ViewProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-const ViewProductbyid = async(req,res)=>{
+const EditProductbyid = async(req,res)=>{
   try{
-    const id= req.headers.id
+    const id= req.params.id
     const product = await Product.findById({_id:id});
     res.json(product)
   }catch(err){
     console.log(err)
   }
 }
+const UpdateProductbyid = async(req,res)=>{
+  try{
+    const id= req.params.id
+    const {productName,productPrice,productDescription,productQuantity}=req.body;
+    const image=req.file.filename;
+    const product = await Product.findByIdAndUpdate(id,{
+      productName,
+      productPrice,
+      productDescription,
+      productQuantity,
+      image:image
+    });
+    await product.save()
+    res.json({message:"product updated successfully",status:200})
+  }catch(err){
+    console.log(err)
+  }
+}
 
-module.exports = { getalluser, delUser, addProduct, ViewProduct,ViewProductbyid };
+const DelProduct = async(req,res)=>{
+  try{
+    const id=req.params.id;
+    await Product.findByIdAndDelete(id)
+    res.json("Product deleted successfully")
+  }catch(error){
+    console.log(error)
+  }
+}
+
+module.exports = { getalluser, delUser, addProduct, ViewProduct,EditProductbyid,UpdateProductbyid,DelProduct };

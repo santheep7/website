@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AXIOS from 'axios';
-import AdminBar from './adminnavbar';
+import UserNavbar from './navbar'; // Replace with your user navbar component
 import {
   Card,
   CardContent,
@@ -11,45 +11,40 @@ import {
   Box,
   CardActions,
 } from '@mui/material';
-import './viewprod.css'; // You can still keep this for layout tweaks
 import { useNavigate } from 'react-router-dom';
 
-export default function AdminViewProducts() {
-  const navigate = useNavigate()
+export default function UserViewProducts() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    AXIOS.get('http://localhost:9000/api/admin/viewproducts')
+    AXIOS.get('http://localhost:9000/api/user/viewproduct') // Use the appropriate user-facing endpoint
       .then((res) => setProducts(res.data))
       .catch((err) => console.log(err));
   }, []);
-// Inside your component
-const deleteProduct = (id) => {
-  AXIOS.delete(`http://localhost:9000/api/admin/deleteproduct/${id}`)
-    .then((res) => {
-      alert(res.data.message || 'Product deleted');
-      // Refresh the product list by filtering out the deleted one
-      setProducts((prevProducts) => prevProducts.filter((p) => p._id !== id));
-    })
-    .catch((err) => {
-      console.error(err);
-      alert('Failed to delete product');
-    });
-};
-
   
-
+  const addToCart = (product) => {
+    AXIOS.post('http://localhost:9000/api/user/addcart', {
+      productId: product._id,
+      quantity: 1, // You can adjust quantity logic here
+    })
+      .then((res) => alert(res.data.message || 'Added to cart'))
+      .catch((err) => {
+        console.error(err);
+        alert('Failed to add to cart');
+      });
+  };
   return (
     <>
-      <AdminBar />
+      <UserNavbar />
       <Box sx={{ padding: 3 }}>
         <Typography variant="h4" gutterBottom>
-          Available Products
+          Shop Products
         </Typography>
         <Grid container spacing={3}>
           {products.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item._id}>
-              <Card sx={{ maxWidth: 345 }} style={{borderRadius:"9px"}}>
+              <Card sx={{ maxWidth: 345 }} style={{ borderRadius: "9px" }}>
                 <CardMedia
                   component="img"
                   height="200"
@@ -67,8 +62,13 @@ const deleteProduct = (id) => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                <Button size="small" color="error" onClick={() => deleteProduct(item._id)}>Delete</Button>
-                  <Button size="small" color="warning" onClick={() => navigate(`/admineditproduct/${item._id}`)}>Edit</Button>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => addToCart(item)}
+                  >
+                    Add to Cart
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>

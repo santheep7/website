@@ -13,7 +13,7 @@ export default function UseNavbar({searchquery}) {
 
       <ul className="nav-links">
         <li><a href="/userhome">Home</a></li>
-        <li><a href="#">View Items</a></li>
+        <li><a href="/userviewproducts">View Items</a></li>
         <li><a href="#">View Cart </a></li>
         <li><a href="#">Contact</a></li>
 

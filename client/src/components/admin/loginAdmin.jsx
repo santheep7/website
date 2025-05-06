@@ -1,72 +1,79 @@
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { toast, ToastContainer, Bounce } from 'react-toastify';
+import { TextField, Button, Container, Typography, Box, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 function AdminLogin() {
-  const [admin, setAdmin] = useState({
-    email: "",
-    password: ""
-  })
-  const navigate = useNavigate()
+  const [admin, setAdmin] = useState({ email: '', password: '' });
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
-    setAdmin({ ...admin, [e.target.name]: e.target.value })
-  }
+    setAdmin({ ...admin, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Email entered:", admin.email);
-    console.log("Password entered:", admin.password);
-
-    if (admin.email.trim().toLowerCase() === "santheep@gmail.com" && admin.password.trim() === "12345") {
-      toast.success("login successful");
+    if (admin.email.trim().toLowerCase() === 'santheep@gmail.com' && admin.password.trim() === '12345') {
+      setSnackbar({ open: true, message: 'Login successful', severity: 'success' });
       setTimeout(() => {
-        navigate('/adminHome')
-      }
-        , 3000)
-      setAdmin({ email: "", password: "" }); // optional: clear form
+        navigate('/adminHome');
+      }, 3000);
+      setAdmin({ email: '', password: '' });
     } else {
-      toast.error("invalid credentials");
+      setSnackbar({ open: true, message: 'Invalid credentials', severity: 'error' });
     }
   };
-  return (
-    <div className="container" >
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
-      <div>
-        <h1>Welcome to Admin Login</h1>
-      </div>
-      <div className="form" style={{ width: "400px", marginLeft: "auto", marginRight: "auto", marginTop: "50px" }}>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" name='email' placeholder="Enter email" onChange={handleChange} />
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
-            </Form.Text>
-          </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" name='password' placeholder="Password" onChange={handleChange} />
-          </Form.Group>
-          <Button variant="primary" type="submit">
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  return (
+    <Container maxWidth="sm">
+      {/* Snackbar for Toast Replacement */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+
+      <Box sx={{ mt: 8, p: 3, boxShadow: 3, borderRadius: 2 }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Welcome to Admin Login
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Email Address"
+            name="email"
+            type="email"
+            margin="normal"
+            variant="outlined"
+            onChange={handleChange}
+            value={admin.email}
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            name="password"
+            type="password"
+            margin="normal"
+            variant="outlined"
+            onChange={handleChange}
+            value={admin.password}
+          />
+          <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 2 }}>
             Submit
           </Button>
-        </Form>
-      </div>
-    </div>
+        </form>
+      </Box>
+    </Container>
   );
 }
 

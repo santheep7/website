@@ -15,6 +15,7 @@ export default function AdminBar({ setSearchQuery }) {
       <ul className="nav-links">
         <li><a href="/adminHome">Home</a></li>
         <li><a href="/addproducts">Add Items</a></li>
+        <li><a href="/adminviewproducts">View Products</a></li>
         <li><a href="/viewUser">View USERS</a></li>
         <li><a href="#">Contact</a></li>
 

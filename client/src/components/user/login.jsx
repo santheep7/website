@@ -4,7 +4,7 @@ import './log.css'; // link your CSS file
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // make sure you import this!
-
+import UseNavbar from "./navbar";
 export default function LoginUser() {
     const [record, setRecord] = useState({
         email: "",
@@ -50,6 +50,7 @@ export default function LoginUser() {
 
     return (
         <>
+        <UseNavbar/>
             <ToastContainer
                 position="top-center"
                 autoClose={5000}

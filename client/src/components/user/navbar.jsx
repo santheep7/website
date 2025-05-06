@@ -1,17 +1,20 @@
 import { NavDropdown } from 'react-bootstrap';  // Import the NavDropdown
 import './navbar.css';
 
-export default function UseNavbar() {
+export default function UseNavbar({searchquery}) {
+  const searchChange = (e)=>{
+    searchquery(e.target.value);
+  }
   return (
     <nav className="navbar">
       <div className="logo">
-        🚀 MySite
+        USER
       </div>
 
       <ul className="nav-links">
-        <li><a href="#">Home</a></li>
+        <li><a href="/userhome">Home</a></li>
         <li><a href="#">View Items</a></li>
-        <li><a href="/viewUser">View USERs</a></li>
+        <li><a href="#">View Cart </a></li>
         <li><a href="#">Contact</a></li>
 
         {/* Dropdown Menu without hover underline */}
@@ -26,7 +29,7 @@ export default function UseNavbar() {
 
       {/* Search Bar */}
       <div className="search-bar">
-        <input type="text" placeholder="Search..." />
+        <input type="text" placeholder="Search..." onChange={searchChange} />
       </div>
     </nav>
   );

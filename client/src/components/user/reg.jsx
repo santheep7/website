@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import AXIOS from 'axios';
 import './reg.css';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import UseNavbar from "./navbar";
+import { useNavigate } from "react-router-dom";
 export default function RegisterPage(){
     const [record,setRecord]=useState({
         username:"",
@@ -9,6 +11,7 @@ export default function RegisterPage(){
         password:""
     })
     const [error,setError]=useState({});
+    const navigate =useNavigate()
     
     const handleChange=(e)=>{
      setRecord({...record,[e.target.name]:e.target.value})
@@ -35,6 +38,7 @@ export default function RegisterPage(){
         .then((res)=>{
             console.log(res.data)
             toast.success('User Registered Successful')
+            setTimeout(() => { navigate("/userhome"); }, 3000);
         }).catch((err)=>{
             console.log(err)
             alert("Error occcured")
@@ -42,6 +46,7 @@ export default function RegisterPage(){
     }
     return(
         <>
+        <UseNavbar/>
             <ToastContainer
                 position="top-center"
                 autoClose={5000}
@@ -63,7 +68,7 @@ export default function RegisterPage(){
                     {error.email && <span style={{ color: "red" }}></span>}{error.email}</p>
                 <p><input type="password" name="password" placeholder="password" onChange={handleChange} />
                     {error.password && <span style={{ color: "red" }}></span>}{error.password}</p>
-                <p><button type="submit">Login</button>
+                <p><button type="submit">Register</button>
                 <a href="/login">Sign In</a></p>
             </form>
         </>

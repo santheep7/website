@@ -51,7 +51,7 @@ export default function Homepage1() {
   }, [products]);
 
   const addToCart = (product) => {
-    alert("Not logined..!")
+    // alert("Not logined..!")
    navigate("/login")
   };
 

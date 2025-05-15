@@ -18,6 +18,7 @@ export default function UserViewProducts() {
 
   useEffect(() => {
     const tokenStr = localStorage.getItem('token');
+    console.log("token",tokenStr)
     if (!tokenStr) {
       alert('User not logged in!');
       navigate('/login');
@@ -59,7 +60,7 @@ export default function UserViewProducts() {
   const tokenStr = jwtDecode(localStorage.getItem('token'));
 
   const addToCart = (product) => {
-    if (!userId) return;
+    // if (!userId) return;
 
     AXIOS.post(
       'http://localhost:9000/api/user/addcart',

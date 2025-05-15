@@ -25,7 +25,7 @@ const loginUser=async(req,res)=>{
         console.log(loggeduser)
         if(loggeduser){
             if(loggeduser.password == password){
-                const token =jwt.sign({id:loggeduser._id},"jwtwebtoken321",{expiresIn:"1hr"})
+                const token =jwt.sign({id:loggeduser._id},process.env.jwt_secret_key,{expiresIn:"1hr"})
                 res.json({msg:"user logined succesfully",status:200,token,username:loggeduser.username});
 
             }else{

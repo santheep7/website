@@ -36,7 +36,7 @@ export default function LoginUser() {
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("username", res.data.username); // Save username
                     toast.success('User Login successful');
-                    setTimeout(() => { navigate("/"); }, 1000);
+                    setTimeout(() => { navigate("/userviewproduct"); }, 1000);
                 } else {
                     toast.error(res.data.msg);
                 }

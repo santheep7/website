@@ -1,40 +1,48 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Correct imports
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// Import your components
-import LoginUser from './components/user/login';
-import RegisterPage from './components/user/reg';
-import UserHome from './components/user/userhome';
-import AdminLogin from './components/admin/loginAdmin';
-import Adminhome from './components/admin/adminhome';
-import ViewUserDetails from './components/admin/viewUser';
-import UseNavbar from './components/user/navbar';
-import AdminBar from './components/admin/adminnavbar';
-import Addproducts from './components/admin/addproducts';
-import AdminViewProduct from './components/admin/adminviewproducts';
-import Admineditproduct from './components/admin/admineditproduct';
-import UserViewProducts from './components/user/userviewproducts';
-
-
+// Lazy-loaded components
+const LoginUser = lazy(() => import('./components/user/login'));
+const RegisterPage = lazy(() => import('./components/user/reg'));
+const AdminLogin = lazy(() => import('./components/admin/loginAdmin'));
+const Adminhome = lazy(() => import('./components/admin/adminHome'));
+const ViewUserDetails = lazy(() => import('./components/admin/viewUser'));
+const AdminBar = lazy(() => import('./components/admin/adminnavbar'));
+const Addproducts = lazy(() => import('./components/admin/addproducts'));
+const AdminViewProduct = lazy(() => import('./components/admin/adminviewproducts'));
+const Admineditproduct = lazy(() => import('./components/admin/admineditproduct'));
+const UserViewProducts = lazy(() => import('./components/user/userviewproducts'));
+const UserCart = lazy(() => import('./components/user/usercart'));
+const ViewOrdersAdmin = lazy(() => import('./components/admin/vieworders'));
+const UserOrders = lazy(() => import('./components/user/vieworders'));
+const Homepage1=lazy(()=>import('./components/user/homepage1'))
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<UseNavbar />} />
-        <Route path="/adminnavbar" element={<AdminBar />} />
-        <Route path='/addproducts' element={<Addproducts/>}/>
-        <Route path="/login" element={<LoginUser />} />
-        <Route path="/viewUser" element={<ViewUserDetails/>}/>
-        <Route path="/reg" element={<RegisterPage />} />
-        <Route path="/userhome" element={<UserHome />} />
-        <Route path="/adminlogin" element={<AdminLogin />} />
-        <Route path="/adminhome" element={<Adminhome />} />
-        <Route path="/adminviewproducts" element={<AdminViewProduct />} />
-        <Route path="/admineditproduct/:id" element={<Admineditproduct />} />
-        <Route path='/userviewproducts' element={<UserViewProducts/>}/>
-        <Route path='/usercart' element={<UserViewProducts/>}/>
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Homepage1/>}/>
+          {/* Homepage */}
+          <Route path="/userviewproduct" element={<UserViewProducts />} />
+
+          {/* User pages */}
+          <Route path="/login" element={<LoginUser />} />
+          <Route path="/reg" element={<RegisterPage />} />
+          <Route path="/usercart" element={<UserCart />} />
+          <Route path="/viewuserorders" element={<UserOrders />} />
+
+          {/* Admin pages */}
+          <Route path="/adminnavbar" element={<AdminBar />} />
+          <Route path="/viewUser" element={<ViewUserDetails />} />
+          <Route path="/addproducts" element={<Addproducts />} />
+          <Route path="/adminlogin" element={<AdminLogin />} />
+          <Route path="/adminhome" element={<Adminhome />} />
+          <Route path="/adminviewproducts" element={<AdminViewProduct />} />
+          <Route path="/admineditproduct/:id" element={<Admineditproduct />} />
+          <Route path="/vieworders" element={<ViewOrdersAdmin />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

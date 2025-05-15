@@ -1,6 +1,6 @@
 const User = require('../model/user');
 const Product = require('../model/productmodel');
-
+const Order = require('../model/order')
 const getalluser = async (req, res) => {
   try {
     const users = await User.find();
@@ -86,4 +86,30 @@ const DelProduct = async(req,res)=>{
   }
 }
 
-module.exports = { getalluser, delUser, addProduct, ViewProduct,EditProductbyid,UpdateProductbyid,DelProduct };
+const ViewOrder = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate('userId', 'username email')  // Populate user details
+      .populate('products.productId', 'productName');  // Populate product name
+
+    res.json(orders);
+  } catch (err) {
+    console.error("ViewOrder Error:", err);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+};
+
+const updateStatus=async(req,res)=>{
+    try{
+        const id=req.headers._id
+        const {status}=req.body
+        const order=await Order.findById(id)
+        order.status=status
+        order.save()
+        res.json("Order status updated successfully")
+    }catch(err){
+        console.log(err)
+    }
+}
+
+module.exports = { getalluser, delUser, addProduct, ViewProduct,EditProductbyid,UpdateProductbyid,DelProduct,ViewOrder,updateStatus };

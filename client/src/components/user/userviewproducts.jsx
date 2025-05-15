@@ -1,39 +1,87 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AXIOS from 'axios';
-import UserNavbar from './navbar'; // Replace with your user navbar component
+import UserNavbar from './navbar';
 import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Button,
-  Grid,
-  Box,
-  CardActions,
+  Card, CardContent, CardMedia, Typography,
+  Button, Grid, Box, CardActions, CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import gsap from 'gsap';
 
 export default function UserViewProducts() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
+  const cardsRef = useRef([]);
 
   useEffect(() => {
-    AXIOS.get('http://localhost:9000/api/user/viewproduct') // Use the appropriate user-facing endpoint
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.log(err));
-  }, []);
-  
-  const addToCart = (product) => {
-    AXIOS.post('http://localhost:9000/api/user/addcart', {
-      productId: product._id,
-      quantity: 1, // You can adjust quantity logic here
-    })
-      .then((res) => alert(res.data.message || 'Added to cart'))
+    const tokenStr = localStorage.getItem('token');
+    if (!tokenStr) {
+      alert('User not logged in!');
+      navigate('/login');
+      return;
+    }
+
+    const token = jwtDecode(tokenStr);
+    setUserId(token.id);
+
+    AXIOS.get('http://localhost:9000/api/user/viewproduct')
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+      })
       .catch((err) => {
-        console.error(err);
+        console.log('Error fetching products:', err);
+        setLoading(false);
+      });
+  }, [navigate]);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      gsap.fromTo(cardsRef.current,
+        {
+          opacity: 0,
+          y: 50,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power3.out',
+        }
+      );
+    }
+  }, [products]);
+
+  const tokenStr = jwtDecode(localStorage.getItem('token'));
+
+  const addToCart = (product) => {
+    if (!userId) return;
+
+    AXIOS.post(
+      'http://localhost:9000/api/user/addcart',
+      {
+        productId: product._id,
+        quantity: 1,
+      },
+      {
+        headers: { userId: tokenStr.id },
+      }
+    )
+      .then((res) => {
+        alert(res.data || 'Added to cart');
+      })
+      .catch((err) => {
+        console.error('Error adding to cart:', err);
         alert('Failed to add to cart');
       });
   };
+
+  if (loading) return <CircularProgress style={{ margin: 100 }} />;
+
   return (
     <>
       <UserNavbar />
@@ -42,9 +90,13 @@ export default function UserViewProducts() {
           Shop Products
         </Typography>
         <Grid container spacing={3}>
-          {products.map((item) => (
-            <Grid item xs={12} sm={6} md={4} key={item._id}>
-              <Card sx={{ maxWidth: 345 }} style={{ borderRadius: "9px" }}>
+          {products.map((item, index) => (
+            <Grid
+              item xs={12} sm={6} md={4}
+              key={item._id}
+              ref={(el) => (cardsRef.current[index] = el)}
+            >
+              <Card sx={{ maxWidth: 345, borderRadius: 2 }}>
                 <CardMedia
                   component="img"
                   height="200"
@@ -52,22 +104,24 @@ export default function UserViewProducts() {
                   alt={item.productName}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h6" component="div">
+                  <Typography gutterBottom variant="h6">
                     {item.productName}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     <strong>Price:</strong> ₹{item.productPrice} <br />
-                    <strong>Qty:</strong> {item.productQuantity} <br />
-                    <strong>Desc:</strong> {item.productDescription}
+                    <strong>Qty in Stock:</strong> {item.productQuantity} <br />
+                    <strong>Description:</strong> {item.productDescription}
                   </Typography>
                 </CardContent>
                 <CardActions>
                   <Button
                     size="small"
+                    variant="contained"
                     color="primary"
+                    disabled={item.productQuantity === 0}
                     onClick={() => addToCart(item)}
                   >
-                    Add to Cart
+                    {item.productQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                   </Button>
                 </CardActions>
               </Card>

@@ -38,7 +38,7 @@ export default function RegisterPage(){
         .then((res)=>{
             console.log(res.data)
             toast.success('User Registered Successful')
-            setTimeout(() => { navigate("/userhome"); }, 3000);
+            setTimeout(() => { navigate("/login"); }, 3000);
         }).catch((err)=>{
             console.log(err)
             alert("Error occcured")

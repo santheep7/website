@@ -26,7 +26,7 @@ const loginUser=async(req,res)=>{
         if(loggeduser){
             if(loggeduser.password == password){
                 const token =jwt.sign({id:loggeduser._id},"jwtwebtoken321",{expiresIn:"1hr"})
-                res.json({msg:"user logined succesfully",status:200,token});
+                res.json({msg:"user logined succesfully",status:200,token,username:loggeduser.username});
 
             }else{
                 res.json({msg:"invalid credentials",status:400})
@@ -48,16 +48,18 @@ const ViewProduct = async (req, res) => {
 };
 
 const AddCart=async(req,res)=>{
-    const userId=req.headers.userId
+    const userId=req.headers.userid
     const {productId,Quantity}=req.body
+    console.log(req.headers)
     try{
-      const cart=await Cart.findOne({userId:userId})
+      const cart=await Cart.findOne({userId:userId,status:"cart"})
       if(cart){
         const productIndex=cart.product.findIndex(p=>
           p.productId==productId
         )
         if(productIndex > -1){
-          cart.product[productIndex].quantity+=Quantity || 1
+          cart.product[productIndex].quantity += Quantity ? Quantity : 1;
+
         }else{
           cart.product.push({productId,quantity:Quantity})
         }
@@ -78,4 +80,40 @@ const AddCart=async(req,res)=>{
     }
 }; 
 
-module.exports= {registerUser,loginUser,ViewProduct,AddCart}
+const fetchCartById=async(req,res)=>{
+  try{
+   const userId=req.headers.id;
+   const cartItems=await Cart.findOne({userId,status:"cart"}).populate('product.productId')
+   console.log(userId)
+   console.log(cartItems)
+   res.json(cartItems)
+  }catch(err){
+     console.log(err)
+   }
+};
+const deleteCartItem = async (req, res) => {
+  try {
+    const userId = req.headers.id;
+    const itemId = req.params.itemId; 
+
+    const updatedCart = await Cart.findOneAndUpdate(
+      { userId, status: "cart" },
+      { $pull: { product: { _id: itemId } } },
+      { new: true }
+    ).populate('product.productId');
+
+    if (!updatedCart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    res.json({ message: "Item removed from cart", cart: updatedCart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete item from cart" });
+  }
+};
+
+
+
+
+module.exports= {registerUser,loginUser,ViewProduct,AddCart,fetchCartById,deleteCartItem}

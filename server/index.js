@@ -6,11 +6,13 @@ const cors =require('cors')
 app.use(cors())
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+require('dotenv').config()
 app.use('/uploads',express.static('uploads'))
 const mongoose =require('mongoose')
+const orderRoute = require('./router/orderRouter')
 const dbconnect =async()=>{
     try{
-        await mongoose.connect("mongodb://localhost:27017/testsite")
+        await mongoose.connect(process.env.database_connection)
         console.log("Database connected successfully")
     }
     catch(error){
@@ -20,6 +22,7 @@ const dbconnect =async()=>{
 dbconnect()
 app.use('/api/user',userRoute)
 app.use('/api/admin',adminRoute)
+app.use('/api/order',orderRoute)
 // do not give 6000 as PORT it arises issues
 app.listen(9000,()=>{
     console.log("Server started successful")
